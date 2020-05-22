@@ -1,6 +1,40 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+
+struct ShaderSource {
+    std::string VertexSource;
+    std::string FragmentSource;
+};
+
+static ShaderSource parseShader(const std::string& filepath) {
+    std::ifstream stream(filepath);
+
+    enum class ShaderType {NONE=-1,VERTEX=0,FRAGMENT=1};
+
+    ShaderType type = ShaderType::NONE;
+    std::string line;
+    std::stringstream ss[2];
+
+    while(getline(stream,line)){
+        if (line.find("#shader") != std::string::npos) {
+            if (line.find("vertex") != std::string::npos)
+                type = ShaderType::VERTEX;
+            else if (line.find("fragment") != std::string::npos)
+                type = ShaderType::FRAGMENT;         
+        }
+        else {
+            if(type != ShaderType::NONE)
+                ss[(int)type] << line << '\n';
+        }
+    }
+
+    return {ss[0].str(),ss[1].str()};
+}
 
 static unsigned int CompileShader(unsigned int type,const std::string& source) {
     unsigned int id = glCreateShader(type);
@@ -71,44 +105,36 @@ int main(void)
 
     std::cout << "OpenGL loaded: " <<glGetString(GL_VERSION) << std::endl;
 
-    float positions[6] = { //Vertex positions for a triangle
+    float positions[] = { //Vertex positions for a triangle
         -0.5f, -0.5f,
-         0.0f,  0.5f,
-         0.5f, -0.5f
+         0.5f, -0.5f,
+         0.5f,  0.5f,
+        -0.5f,  0.5f
+    };
+
+    unsigned int indices[] = {
+        0,1,2,
+        2,3,0
     };
 
     unsigned int buffer; //Create a place to store the buffer ID
     glGenBuffers(1, &buffer); //Generate a buffer and return its ID
     glBindBuffer(GL_ARRAY_BUFFER, buffer); //Set the current buffer in the OpenGL state machine
-    glBufferData(GL_ARRAY_BUFFER, 6 *sizeof(float),&positions,GL_STATIC_DRAW); //Add position data to the buffer
+    glBufferData(GL_ARRAY_BUFFER, 8 *sizeof(float), positions,GL_STATIC_DRAW); //Add position data to the buffer
     
     glEnableVertexAttribArray(0); //Enable an attribute for the buffer, defined on the next line
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float),(const void*)0); //Declare the layout of the buffer data
 
-
-    std::string vertexShader = 
-        "#version 330 core\n"
-        "\n"
-        "layout(location = 0) in vec4 position;"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = position;\n"
-        "}\n";
-
-    std::string fragmentShader =
-        "#version 330 core\n"
-        "\n"
-        "layout(location = 0) out vec4 colour;"
-        "\n"
-        "void main()\n"
-        "{\n"
-        "   colour = vec4(1.0, 0.0, 0.0, 1.0);\n"
-        "}\n";
+    unsigned int ibo; //Create an index buffer
+    glGenBuffers(1, &ibo); //Generate the buffer and return its ID
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); //Set the current buffer in the OpenGL state machine
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW); //Add index data to the buffer
 
 
-    unsigned int shader = CreateShader(vertexShader,fragmentShader);
-    glUseProgram(shader);
+    ShaderSource shaderSource = parseShader("res/shaders/basic.shader"); //Parse a simple shader
+
+    unsigned int shader = CreateShader(shaderSource.VertexSource,shaderSource.FragmentSource); //Create the shader
+    glUseProgram(shader); //Assign the shader to the OpenGL state machine
 
 
     //glBindBuffer(GL_ARRAY_BUFFER, 0); //Unbind the buffer
@@ -120,7 +146,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         glBindBuffer(GL_ARRAY_BUFFER, buffer); //Bind the buffer
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,nullptr); //Draw the vertices using the index buffer
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -129,7 +155,7 @@ int main(void)
         glfwPollEvents();
     }
 
-    glDeleteProgram(shader);
+    glDeleteProgram(shader); //Delete the shader once we've finished with it
 
     glfwTerminate();
     return 0;
