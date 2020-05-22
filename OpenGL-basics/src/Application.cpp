@@ -1,9 +1,14 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <sstream>
+
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 
 struct ShaderSource {
@@ -95,7 +100,8 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
-
+    
+    glfwSwapInterval(1);
 
     if (glewInit() != GLEW_OK)
     {
@@ -105,39 +111,40 @@ int main(void)
 
     std::cout << "OpenGL loaded: " <<glGetString(GL_VERSION) << std::endl;
 
-    float positions[] = { //Vertex positions for a triangle
+    float positions[] = { //Vertex positions for a square
         -0.5f, -0.5f,
          0.5f, -0.5f,
          0.5f,  0.5f,
         -0.5f,  0.5f
     };
 
-    unsigned int indices[] = {
+    unsigned int indices[] = { //Inices to draw a square
         0,1,2,
         2,3,0
     };
 
-    unsigned int buffer; //Create a place to store the buffer ID
-    glGenBuffers(1, &buffer); //Generate a buffer and return its ID
-    glBindBuffer(GL_ARRAY_BUFFER, buffer); //Set the current buffer in the OpenGL state machine
-    glBufferData(GL_ARRAY_BUFFER, 8 *sizeof(float), positions,GL_STATIC_DRAW); //Add position data to the buffer
-    
+    VertexBuffer* vb = new VertexBuffer(positions, 8 * sizeof(float));
+
     glEnableVertexAttribArray(0); //Enable an attribute for the buffer, defined on the next line
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float),(const void*)0); //Declare the layout of the buffer data
 
-    unsigned int ibo; //Create an index buffer
-    glGenBuffers(1, &ibo); //Generate the buffer and return its ID
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo); //Set the current buffer in the OpenGL state machine
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW); //Add index data to the buffer
+    IndexBuffer* ib = new IndexBuffer(indices, 6);
 
-
-    ShaderSource shaderSource = parseShader("res/shaders/basic.shader"); //Parse a simple shader
+    ShaderSource shaderSource = parseShader("res/shaders/basic.shader"); //Parse a simple shader using a file path
 
     unsigned int shader = CreateShader(shaderSource.VertexSource,shaderSource.FragmentSource); //Create the shader
     glUseProgram(shader); //Assign the shader to the OpenGL state machine
 
+    int location = glGetUniformLocation(shader,"u_colour"); //Find the location of the uniform variable within the shader
+    ASSERT(location != -1); //The location should not be -1, if so, the uiform cannot be found in the shader
+    glUniform4f(location, 0.6f, 0.3f, 0.8f, 1.0f); //Set the values of the uniform
 
-    //glBindBuffer(GL_ARRAY_BUFFER, 0); //Unbind the buffer
+
+    float increment = 0.05f;
+    float r = 0.0f;
+    glBindBuffer(GL_ARRAY_BUFFER, 0); //Unbind the buffer
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); //Unbind the idex buffer
+
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -145,8 +152,15 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glBindBuffer(GL_ARRAY_BUFFER, buffer); //Bind the buffer
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,nullptr); //Draw the vertices using the index buffer
+        vb->Bind();
+        ib->Bind();
+
+        if (r > 1.0f || r < 0.0f)
+            increment *= -1;
+        r += increment;
+        glUniform4f(location, r, 0.3f, 0.8f, 1.0f); //Set the values of the uniform
+        //Use GLCALL to check for errors
+        GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT,nullptr)); //Draw the vertices using the index buffer
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -156,6 +170,9 @@ int main(void)
     }
 
     glDeleteProgram(shader); //Delete the shader once we've finished with it
+
+    delete vb;
+    delete ib;
 
     glfwTerminate();
     return 0;
