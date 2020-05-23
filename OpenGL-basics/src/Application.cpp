@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
 
 
 struct ShaderSource {
@@ -123,12 +124,13 @@ int main(void)
         2,3,0
     };
 
-    VertexBuffer* vb = new VertexBuffer(positions, 8 * sizeof(float));
 
-    glEnableVertexAttribArray(0); //Enable an attribute for the buffer, defined on the next line
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2*sizeof(float),(const void*)0); //Declare the layout of the buffer data
-
-    IndexBuffer* ib = new IndexBuffer(indices, 6);
+    VertexArray* va = new VertexArray(); //Make a new vertex array object to store the VB and its layout
+    VertexBuffer* vb = new VertexBuffer(positions, 8 * sizeof(float)); //Make a buffer to store the vertex positions
+    VertexBufferLayout* layout = new VertexBufferLayout(); //Define the layout for the buffer
+    layout->Push<float>(2); //Each position is made up of 2 floats
+    va->AddBuffer(*vb, *layout); //Update the vertex array object with the position data
+    IndexBuffer* ib = new IndexBuffer(indices, 6); //Define which order the vertices should be drawn in
 
     ShaderSource shaderSource = parseShader("res/shaders/basic.shader"); //Parse a simple shader using a file path
 
@@ -142,8 +144,6 @@ int main(void)
 
     float increment = 0.05f;
     float r = 0.0f;
-    glBindBuffer(GL_ARRAY_BUFFER, 0); //Unbind the buffer
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); //Unbind the idex buffer
 
 
     /* Loop until the user closes the window */
@@ -152,7 +152,7 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        vb->Bind();
+        va->Bind();
         ib->Bind();
 
         if (r > 1.0f || r < 0.0f)
@@ -171,9 +171,9 @@ int main(void)
 
     glDeleteProgram(shader); //Delete the shader once we've finished with it
 
+    delete va;
     delete vb;
     delete ib;
-
     glfwTerminate();
     return 0;
 }
