@@ -1,0 +1,50 @@
+﻿  Application.cpp
+  IndexBuffer.cpp
+C:\Dev\OpenGL-basics\OpenGL-basics\src\IndexBuffer.cpp(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Renderer.cpp
+  Shader.cpp
+  VertexArray.cpp
+C:\Dev\OpenGL-basics\OpenGL-basics\src\VertexArray.cpp(25,3): warning C4312: 'type cast': conversion from 'unsigned int' to 'const void *' of greater size
+  VertexBuffer.cpp
+C:\Dev\OpenGL-basics\OpenGL-basics\src\VertexBuffer.cpp(2,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  VertexBufferLayout.cpp
+  Generating Code...
+Application.obj : error LNK2019: unresolved external symbol __imp_glewInit referenced in function main
+Application.obj : error LNK2019: unresolved external symbol glfwInit referenced in function main
+Application.obj : error LNK2019: unresolved external symbol glfwTerminate referenced in function main
+Application.obj : error LNK2019: unresolved external symbol glfwCreateWindow referenced in function main
+Application.obj : error LNK2019: unresolved external symbol glfwWindowShouldClose referenced in function main
+Application.obj : error LNK2019: unresolved external symbol glfwPollEvents referenced in function main
+Application.obj : error LNK2019: unresolved external symbol glfwMakeContextCurrent referenced in function main
+Application.obj : error LNK2019: unresolved external symbol glfwSwapBuffers referenced in function main
+Application.obj : error LNK2019: unresolved external symbol glfwSwapInterval referenced in function main
+IndexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewBindBuffer
+VertexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewBindBuffer
+IndexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewBufferData
+VertexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewBufferData
+IndexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewDeleteBuffers
+VertexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewDeleteBuffers
+IndexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewGenBuffers
+VertexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewGenBuffers
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewAttachShader
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewCompileShader
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewCreateProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewCreateShader
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewDeleteProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewDeleteShader
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderInfoLog
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetShaderiv
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewGetUniformLocation
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewLinkProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewShaderSource
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewUniform4f
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewUseProgram
+Shader.obj : error LNK2001: unresolved external symbol __imp___glewValidateProgram
+VertexArray.obj : error LNK2001: unresolved external symbol __imp___glewEnableVertexAttribArray
+VertexArray.obj : error LNK2001: unresolved external symbol __imp___glewVertexAttribPointer
+VertexArray.obj : error LNK2001: unresolved external symbol __imp___glewBindVertexArray
+VertexArray.obj : error LNK2001: unresolved external symbol __imp___glewDeleteVertexArrays
+VertexArray.obj : error LNK2001: unresolved external symbol __imp___glewGenVertexArrays
+C:\Dev\OpenGL-basics\Dependencies\GLEW\lib\Release\Win32\glew32s.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Dev\OpenGL-basics\Dependencies\GLFW\lib-vc2019\glfw3.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+C:\Dev\OpenGL-basics\Debug\OpenGL-basics-x64.exe : fatal error LNK1120: 32 unresolved externals
