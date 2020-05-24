@@ -14,6 +14,9 @@
 #include "VertexBufferLayout.h"
 #include "Texture.h"
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 int main(void)
 {
     GLFWwindow* window;
@@ -58,13 +61,15 @@ int main(void)
     GLCALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     GLCALL(glEnable(GL_BLEND))
 
+    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f); //Create an orthographic matrix
+
     Texture* texture = new Texture("res/textures/colourSplash.png");
     texture->Bind();
     Shader* shader = new Shader("res/shaders/basic.shader"); //Create a new shader    
     shader->Bind();
     shader->SetUniform1i("u_Texture", 0); //Bind the texture to slot 0
-
-
+    shader->SetUniform4f("u_colour", 0.0f, 0.3f, 0.8f, 1.0f);
+    shader->SetUniformMat4f("u_MVP", proj);
 
     VertexArray* va = new VertexArray(); //Make a new vertex array object to store the VB and its layout
     VertexBuffer* vb = new VertexBuffer(positions, 4 * 4 * sizeof(float)); //Make a buffer to store the vertex positions
