@@ -47,10 +47,10 @@ int main(void)
     std::cout << "OpenGL loaded: " <<glGetString(GL_VERSION) << std::endl;
 
     float positions[] = { //Vertex positions for a square
-        -0.5f, -0.5f, 0.0f, 0.0f,
-         0.5f, -0.5f, 1.0f, 0.0f,
-         0.5f,  0.5f, 1.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 1.0f
+              0,   0, 0.0f, 0.0f,
+            100,   0, 1.0f, 0.0f,
+            100, 100, 1.0f, 1.0f,
+              0, 100, 0.0f, 1.0f,
     };
 
     unsigned int indices[] = { //Inices to draw a square
@@ -61,7 +61,11 @@ int main(void)
     GLCALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     GLCALL(glEnable(GL_BLEND))
 
-    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f); //Create an orthographic matrix
+    glm::mat4 proj = glm::ortho(0.0f, 680.0f, 0.0f , 480.0f, -1.0f, 1.0f); //Create an orthographic matrix
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 0));
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 0));
+
+    glm::mat4 MVP = proj * view * model;
 
     Texture* texture = new Texture("res/textures/colourSplash.png");
     texture->Bind();
@@ -69,7 +73,7 @@ int main(void)
     shader->Bind();
     shader->SetUniform1i("u_Texture", 0); //Bind the texture to slot 0
     shader->SetUniform4f("u_colour", 0.0f, 0.3f, 0.8f, 1.0f);
-    shader->SetUniformMat4f("u_MVP", proj);
+    shader->SetUniformMat4f("u_MVP", MVP);
 
     VertexArray* va = new VertexArray(); //Make a new vertex array object to store the VB and its layout
     VertexBuffer* vb = new VertexBuffer(positions, 4 * 4 * sizeof(float)); //Make a buffer to store the vertex positions
