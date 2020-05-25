@@ -1,6 +1,13 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
+#include "imgui/imgui.h"
+#include "imgui/imgui_impl_glfw.h"
+#include "imgui/imgui_impl_opengl3.h"
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -13,9 +20,6 @@
 #include "Shader.h"
 #include "VertexBufferLayout.h"
 #include "Texture.h"
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
 
 int main(void)
 {
@@ -62,18 +66,14 @@ int main(void)
     GLCALL(glEnable(GL_BLEND))
 
     glm::mat4 proj = glm::ortho(0.0f, 680.0f, 0.0f , 480.0f, -1.0f, 1.0f); //Create an orthographic matrix
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 0));
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(100.0f, 100.0f, 0));
-
-    glm::mat4 MVP = proj * view * model;
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0));
+    glm::vec3 translation = glm::vec3(100.0f, 100.0f, 0);
 
     Texture* texture = new Texture("res/textures/colourSplash.png");
-    texture->Bind();
     Shader* shader = new Shader("res/shaders/basic.shader"); //Create a new shader    
+    texture->Bind();
     shader->Bind();
-    shader->SetUniform1i("u_Texture", 0); //Bind the texture to slot 0
-    shader->SetUniform4f("u_colour", 0.0f, 0.3f, 0.8f, 1.0f);
-    shader->SetUniformMat4f("u_MVP", MVP);
+    shader->SetUniform1i("u_texture", 0); //Bind the texture to slot 0
 
     VertexArray* va = new VertexArray(); //Make a new vertex array object to store the VB and its layout
     VertexBuffer* vb = new VertexBuffer(positions, 4 * 4 * sizeof(float)); //Make a buffer to store the vertex positions
@@ -89,9 +89,20 @@ int main(void)
     
     Renderer* renderer = new Renderer(); //Create a new render to make draw calls
 
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
+
+
+
+    bool show_demo_window = true;
+    bool show_another_window = false;
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
     float increment = 0.05f;
     float r = 0.0f;
-
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -99,16 +110,29 @@ int main(void)
         /* Render here */
         renderer->Clear();
 
-        va->Bind();
-        ib->Bind();
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         if (r > 1.0f || r < 0.0f)
             increment *= -1;
         r += increment;
 
+        ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 680.0f);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
+        glm::mat4 MVP = proj * view * model;
+
+        va->Bind();
+        ib->Bind();
+        texture->Bind();
         shader->Bind();
-        shader->SetUniform4f("u_colour", r, 0.3f, 0.8f, 1.0f); //Set the colour uniform to be passed into the shader
+        shader->SetUniformMat4f("u_MVP", MVP);
         renderer->Draw(*va, *ib, *shader);
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -117,11 +141,17 @@ int main(void)
         glfwPollEvents();
     }
 
+
+
     delete renderer;
     delete shader;
     delete va;
     delete vb;
     delete ib;
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwTerminate();
     return 0;
 }

@@ -7,6 +7,8 @@ layout(location = 1) in vec2 texCoord;
 out vec2 v_TexCoord;
 
 uniform mat4 u_MVP;
+uniform vec4 u_colour;
+uniform sampler2D u_texture;
 
 void main()
 {
