@@ -91,6 +91,11 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 void Renderer::Draw(Object* object, Shader* shader)
 {
     glm::mat4 model = glm::translate(glm::mat4(1.0f), object->GetTranslation());
+    model = glm::rotate(model, object->GetRotation().x, glm::vec3(1, 0, 0));
+    model = glm::rotate(model, object->GetRotation().y, glm::vec3(0, 1, 0));
+    model = glm::rotate(model, object->GetRotation().z, glm::vec3(0, 0, 1));
+    model = glm::scale(model, object->GetScale());
+
     glm::mat4 MVP = proj * view * model; //Move image 1 to translated spot
     object->Bind(shader);
     shader->SetUniformMat4f("u_MVP", MVP);

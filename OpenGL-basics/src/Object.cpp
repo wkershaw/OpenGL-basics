@@ -2,6 +2,11 @@
 #include "VertexBufferLayout.h"
 #include "Texture.h"
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
 Object::Object(float positions[], int positionsSize, unsigned int indices[], int indicesSize) {
 	textures = *new std::vector<Texture*>();
 	va = new VertexArray();
@@ -11,7 +16,9 @@ Object::Object(float positions[], int positionsSize, unsigned int indices[], int
 	va->AddBuffer(*vb, *layout);
 	ib = new IndexBuffer(indices, indicesSize);
 
-	translation = glm::vec3(0.0f, 0.0f, -100.0f);
+	translation = glm::vec3(0.0f, 0.0f, 0.0f);
+	scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
 }
 
