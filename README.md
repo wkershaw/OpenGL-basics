@@ -1,5 +1,10 @@
 # OpenGL-basics
-Implementing some basic openGL code following a series of tutorials by The Cherno [https://www.youtube.com/channel/UCQ-W1KE9EYfdxhL6S4twUNw]
+This project implements some basic OpenGL code to allow for experimentation.
 
-<h2>Material Branch</h2>
-Implements a material system for applying to objects
+<h2>Features:</h2>
+
+<h3>ImGUI</h3>
+ImGUI has been implemented, allowing for easy experimentation and adjustments.
+
+<h3>Physically Based Rendering</h3>
+The project implments a physically based rendering shader and material system using the Cook-Torrance BDRF
