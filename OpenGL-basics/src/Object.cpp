@@ -53,9 +53,17 @@ void Object::Bind(Shader* shader) const
 
 	shader->SetUniform3fv("u_lightPositions", lightPositions);
 	shader->SetUniform3fv("u_lightColours", lightColours);
+	shader->SetUniform3f("u_colour", colour);
 
 	va->Bind();
 	ib->Bind();
+}
+
+void Object::Unbind() const
+{
+
+	va->Unbind();
+	ib->Unbind();
 }
 
 void Object::AddTexture(Texture* texture)

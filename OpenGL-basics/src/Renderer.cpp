@@ -92,6 +92,9 @@ void Renderer::Draw(Object* object, Shader* shader)
         GLCALL(glDrawElements(GL_TRIANGLE_STRIP, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr)); //Draw the vertices using the index buffer
     }
     
+    shader->Unbind();
+    object->Unbind();
+
 }
 
 void Renderer::NewImGuiFrame()

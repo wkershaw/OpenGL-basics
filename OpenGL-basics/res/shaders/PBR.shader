@@ -116,7 +116,6 @@ void main()
     float roughness = texture(u_roughnessMap, TexCoords).r;
     float ao = texture(u_aoMap, TexCoords).r;
 
-
     vec3 N = normalize(Normal);
     vec3 V = normalize(u_cameraPosition - WorldPos);
 

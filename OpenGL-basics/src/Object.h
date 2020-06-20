@@ -19,6 +19,7 @@ public:
 	~Object();
 
 	void Bind(Shader* shader) const;
+	void Unbind() const;
 
 	void AddTexture(Texture* texture);
 	void AddMaterial(Material* material);
@@ -31,7 +32,7 @@ public:
 	void SetLightPosition(int index, glm::vec3 position) { lightPositions[index] = position; };
 	void SetLightColour(int index, glm::vec3 colour) { lightColours[index] = colour; };
 	void SetDrawMode(DrawMode drawMode) { this->drawMode = drawMode; };
-	
+	void SetColour(glm::vec3 colour) { this->colour = colour; };
 
 	glm::vec3 GetTranslation() const { return translation; };
 	glm::vec3 GetRotation() const { return rotation; };
@@ -51,6 +52,7 @@ private:
 	glm::vec3 scale;
 	std::vector<glm::vec3> lightPositions;
 	std::vector<glm::vec3> lightColours;
+	glm::vec3 colour;
 
 	std::vector<Material*> materials;
 	std::vector<Texture*> textures;
