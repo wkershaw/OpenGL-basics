@@ -7,4 +7,9 @@ This project implements some basic OpenGL code to allow for experimentation.
 ImGUI has been implemented, allowing for easy experimentation and adjustments.
 
 <h3>Physically Based Rendering</h3>
-The project implments a physically based rendering shader and material system using the Cook-Torrance BDRF
+The project implments a physically based rendering shader and material system using the Cook-Torrance BDRF 
+
+<br><br>
+
+<img src='https://raw.githubusercontent.com/wkershaw/OpenGL-basics/master/Screenshots/PBR.PNG' width='40%'>
+<img src='https://raw.githubusercontent.com/wkershaw/OpenGL-basics/master/Screenshots/PBR2.PNG' width='40%'>
