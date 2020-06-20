@@ -1,0 +1,81 @@
+The system is: Windows - 10.0.18363 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: D:/Program Files/Visual Studio/VC/Tools/MSVC/14.24.28314/bin/HostX64/x64/cl.exe 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+Microsoft (R) C/C++ Optimizing Compiler Version 19.24.28316 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+CMakeCCompilerId.c
+Microsoft (R) Incremental Linker Version 14.24.28316.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:CMakeCCompilerId.exe 
+CMakeCCompilerId.obj 
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.exe"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.obj"
+
+The C compiler identification is MSVC, found in "C:/Dev/OpenGL-basics/OpenGL-basics/src/vendor/glm/out/build/x64-Debug/CMakeFiles/3.15.19101501-MSVC_2/CompilerIdC/CMakeCCompilerId.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: D:/Program Files/Visual Studio/VC/Tools/MSVC/14.24.28314/bin/HostX64/x64/cl.exe 
+Build flags: 
+Id flags:  
+
+The output was:
+0
+Microsoft (R) C/C++ Optimizing Compiler Version 19.24.28316 for x64
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+CMakeCXXCompilerId.cpp
+Microsoft (R) Incremental Linker Version 14.24.28316.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:CMakeCXXCompilerId.exe 
+CMakeCXXCompilerId.obj 
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.exe"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
+
+The CXX compiler identification is MSVC, found in "C:/Dev/OpenGL-basics/OpenGL-basics/src/vendor/glm/out/build/x64-Debug/CMakeFiles/3.15.19101501-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.exe"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: C:/Dev/OpenGL-basics/OpenGL-basics/src/vendor/glm/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):D:/Program Files/Visual Studio/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_4c944 && [1/2] Building C object CMakeFiles\cmTC_4c944.dir\testCCompiler.c.obj
+[2/2] Linking C executable cmTC_4c944.exe
+
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: C:/Dev/OpenGL-basics/OpenGL-basics/src/vendor/glm/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):D:/Program Files/Visual Studio/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_d3516 && [1/2] Building C object CMakeFiles\cmTC_d3516.dir\CMakeCCompilerABI.c.obj
+[2/2] Linking C executable cmTC_d3516.exe
+
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: C:/Dev/OpenGL-basics/OpenGL-basics/src/vendor/glm/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):D:/Program Files/Visual Studio/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_f7543 && [1/2] Building CXX object CMakeFiles\cmTC_f7543.dir\testCXXCompiler.cxx.obj
+[2/2] Linking CXX executable cmTC_f7543.exe
+
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: C:/Dev/OpenGL-basics/OpenGL-basics/src/vendor/glm/out/build/x64-Debug/CMakeFiles/CMakeTmp
+
+Run Build Command(s):D:/Program Files/Visual Studio/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe cmTC_af644 && [1/2] Building CXX object CMakeFiles\cmTC_af644.dir\CMakeCXXCompilerABI.cpp.obj
+[2/2] Linking CXX executable cmTC_af644.exe
+
+
+

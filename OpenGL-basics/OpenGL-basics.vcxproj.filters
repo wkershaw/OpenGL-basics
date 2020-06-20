@@ -66,9 +66,14 @@
     <ClCompile Include="src\Object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OPENGL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\shaders\basic.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl">
       <Filter>Header Files</Filter>
     </None>
@@ -477,6 +482,8 @@
     <None Include="src\vendor\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="res\shaders\PBR.shader" />
+    <None Include="res\shaders\basic.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Renderer.h">
@@ -1376,9 +1383,27 @@
     <ClInclude Include="src\Object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OPENGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\textures\colourSplash.png">
+    <Image Include="res\textures\albedo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\metallic.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\normal.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\roughness.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\ao.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -1,5 +1,5 @@
 #pragma once
-
+#include "OPENGL.h"
 
 class IndexBuffer {
 private:

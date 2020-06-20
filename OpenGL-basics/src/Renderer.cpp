@@ -1,22 +1,4 @@
 #include "Renderer.h"
-
-
-void GLClearError() { //Clear all OpenGL error flags
-    while (glGetError() != GL_NO_ERROR);
-}
-
-bool GLLogCall(const char* function, const char* file, int line) {
-    while (GLenum error = glGetError())
-    {
-        std::cout << "OpenGL error " << function <<
-            " in " << file << " on line "
-            << line << " : "
-            << error << std::endl;
-        return false;
-    }
-    return true;
-}
-
 Renderer::Renderer()
 {
     /* Initialize the library */
@@ -44,7 +26,9 @@ Renderer::Renderer()
     std::cout << "OpenGL loaded: " << glGetString(GL_VERSION) << std::endl;
 
     proj = glm::perspective(45.0f, 1000 / 800.0f, 1.0f, 1000.0f);
-    view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0));
+
+    cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    view = glm::lookAt(cameraPosition, glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0));
 
 
     //ImGui instantiantion
@@ -96,11 +80,18 @@ void Renderer::Draw(Object* object, Shader* shader)
     model = glm::rotate(model, object->GetRotation().z, glm::vec3(0, 0, 1));
     model = glm::scale(model, object->GetScale());
 
-    glm::mat4 MVP = proj * view * model; //Move image 1 to translated spot
     object->Bind(shader);
-    shader->SetUniformMat4f("u_MVP", MVP);
-
-    GLCALL(glDrawElements(GL_TRIANGLES, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr)); //Draw the vertices using the index buffer
+    shader->SetUniformMat4f("u_proj", proj);
+    shader->SetUniformMat4f("u_view", view);
+    shader->SetUniformMat4f("u_model", model);
+    shader->SetUniform3f("u_cameraPosition", cameraPosition);
+    if (object->GetDrawMode() == Object::DrawMode::TRIANGLES) {
+        GLCALL(glDrawElements(GL_TRIANGLES, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr)); //Draw the vertices using the index buffer
+    }
+    else {
+        GLCALL(glDrawElements(GL_TRIANGLE_STRIP, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr)); //Draw the vertices using the index buffer
+    }
+    
 }
 
 void Renderer::NewImGuiFrame()
