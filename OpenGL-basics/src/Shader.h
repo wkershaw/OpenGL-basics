@@ -1,4 +1,5 @@
 #pragma once
+#include "OPENGL.h"
 #include <string>
 #include <unordered_map>
 #include "glm/glm.hpp"
@@ -30,8 +31,10 @@ public:
 	void Unbind() const;
 
 
-	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
 	void SetUniform1i(const std::string& name, int value);
 	void SetUniformMat4f(const std::string& name, const glm::mat4& matrix);
-
+	void SetUniform1f(const std::string& name, float v1);
+	void SetUniform3f(const std::string& name, const glm::vec3& vector);
+	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	void SetUniform3fv(const std::string& name, const std::vector<glm::vec3>& values);
 };

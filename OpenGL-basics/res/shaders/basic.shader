@@ -1,19 +1,20 @@
 #shader vertex
 #version 330 core
         
-layout(location = 0) in vec4 position;
-layout(location = 1) in vec2 texCoord;
+layout(location = 0) in vec3 lPosition;
+layout(location = 1) in vec2 lUv;
+layout(location = 2) in vec3 lNormal;
 
-out vec2 v_TexCoord;
 
-uniform mat4 u_MVP;
-uniform vec4 u_colour;
-uniform sampler2D u_texture;
+uniform mat4 u_proj;
+uniform mat4 u_view;
+uniform mat4 u_model;
 
 void main()
 {
-    gl_Position = u_MVP * position;
-    v_TexCoord = texCoord;
+    vec3 WorldPos = vec3(u_model * vec4(lPosition, 1.0));
+
+    gl_Position = u_proj * u_view * vec4(WorldPos, 1.0);
 };
 
 
@@ -22,13 +23,9 @@ void main()
         
 layout(location = 0) out vec4 colour;
 
-in vec2 v_TexCoord;
+uniform vec3 u_colour;
 
-uniform vec4 u_colour;
-uniform sampler2D u_texture;
+void main(){
+    colour = vec4(u_colour, 1.0);
 
-void main()
-{
-    vec4 texColour = texture(u_texture, v_TexCoord);
-    colour = texColour;
 };

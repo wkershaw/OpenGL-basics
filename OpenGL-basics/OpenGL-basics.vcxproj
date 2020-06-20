@@ -158,6 +158,9 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\OPENGL.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
@@ -175,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\basic.shader" />
+    <None Include="res\shaders\PBR.shader" />
     <None Include="src\vendor\glm\detail\func_common.inl" />
     <None Include="src\vendor\glm\detail\func_common_simd.inl" />
     <None Include="src\vendor\glm\detail\func_exponential.inl" />
@@ -314,6 +318,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\Material.h" />
+    <ClInclude Include="src\Object.h" />
+    <ClInclude Include="src\OPENGL.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Texture.h" />
@@ -613,7 +620,11 @@
     <ClInclude Include="src\VertexBufferLayout.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\textures\colourSplash.png" />
+    <Image Include="res\textures\albedo.png" />
+    <Image Include="res\textures\ao.png" />
+    <Image Include="res\textures\metallic.png" />
+    <Image Include="res\textures\normal.png" />
+    <Image Include="res\textures\roughness.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
