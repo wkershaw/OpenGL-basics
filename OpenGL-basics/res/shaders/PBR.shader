@@ -28,7 +28,7 @@ void main()
 #shader fragment
 #version 330 core
         
-layout(location = 0) out vec4 colour;
+layout(location = 0) out vec4 FragColour;
 
 in vec2 TexCoords;
 in vec3 WorldPos;
@@ -49,30 +49,11 @@ uniform vec3 u_lightColours[1];
 const float PI = 3.14159265359;
 
 
-vec3 getNormalFromMap()
-{
-    vec3 tangentNormal = texture(u_normalMap, TexCoords).xyz * 2.0 - 1.0;
-
-    vec3 Q1 = dFdx(WorldPos);
-    vec3 Q2 = dFdy(WorldPos);
-    vec2 st1 = dFdx(TexCoords);
-    vec2 st2 = dFdy(TexCoords);
-
-    vec3 N = normalize(Normal);
-    vec3 T = normalize(Q1 * st2.t - Q2 * st1.t);
-    vec3 B = -normalize(cross(N, T));
-    mat3 TBN = mat3(T, B, N);
-
-    return normalize(TBN * tangentNormal);
-}
-
-
 //Fresnel-Schlick approximation finds the ratio between reflection and refraction
 //(Specular : Diffuse)
 vec3 fresnelSchlick(float cosTheta, vec3 F0) {
     return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
-
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
 {
@@ -98,6 +79,7 @@ float GeometrySchlickGGX(float NdotV, float roughness)
 
     return num / denom;
 }
+
 float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 {
     float NdotV = max(dot(N, V), 0.0);
@@ -108,56 +90,70 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
     return ggx1 * ggx2;
 }
 
-
 void main()
 {
-    vec3 albedo = pow(texture(u_albedoMap, TexCoords).rgb, vec3(2.2));
+    // Find material values from textures
+    vec3 albedo = pow(texture(u_albedoMap, TexCoords).rgb, vec3(2.2)); 
     float metallic = texture(u_metallicMap, TexCoords).r;
     float roughness = texture(u_roughnessMap, TexCoords).r;
     float ao = texture(u_aoMap, TexCoords).r;
 
-    vec3 N = normalize(Normal);
-    vec3 V = normalize(u_cameraPosition - WorldPos);
+    vec3 N = normalize(Normal); // Surface normal - Normal Map not currently used
+    vec3 V = normalize(u_cameraPosition - WorldPos); // View direction vector
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
-    vec3 Lo = vec3(0.0f);
-    for (int i = 0; i < 4; ++i) {
-        vec3 L = normalize(u_lightPositions[i] - WorldPos);
-        vec3 H = normalize(V + L);
+    vec3 Lo = vec3(0.0f); // Initial Radiance which will be calculated using the render equation
+    for (int i = 0; i < 1; ++i) { // Loop through each light in scene
+        vec3 L = normalize(u_lightPositions[i] - WorldPos); // Light direction vector
+        vec3 H = normalize(V + L); // Halfway vector between light and view
 
         float distance = length(u_lightPositions[i] - WorldPos);
-        float attenuation = 1.0 / (distance * distance);
+        float attenuation = 1.0 / (distance * distance); // Calculate the light falloff using the inverse square law
         vec3 radiance = u_lightColours[i] * attenuation;
 
+        // Cook torrance is used for the specular half of the calculation
+        // Cook torrance = (D*F*G)/(4(w0.n)(wi.n))
+        // Where:
+        // D = a normal distribution function for determining the amound of surface
+        //     aligned with the halfway vector
+        //
+        // F = the Fresnel equation used to describe surface reflection at a given angle
+        //
+        // G = a geometry function, that describes how a microfacet may shaddow another microfacet
 
+        // Calculate D, G and F
         float NDF = DistributionGGX(N, H, roughness);
         float G = GeometrySmith(N, V, L, roughness);
-
-
         vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
+        // Calculate the Cook-Torrance specular value
         vec3 numerator = NDF * G * F;
         float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-        vec3 specular = numerator / max(denominator, 0.001);
+        vec3 specular = numerator / max(denominator, 0.001); // Ensure divide by 0 does not occur
 
        
-        vec3 kS = F;
+        vec3 kS = F; // Specular ratio
 
-        vec3 kD = vec3(1.0) - kS;
+        vec3 kD = vec3(1.0) - kS; // Diffusion ratio
         kD *= 1.0 - metallic;
 
         float NdotL = max(dot(N, L), 0.0);
 
+
+        // Cook-Torrance reflectance
+        // = kF * Lambert + kS * Cook-Torrance-Specular * N.L
+        // Using Lambert diffusion
+        // Lambert = albedo/Pi
         Lo += (kD * albedo / PI + specular) * radiance * NdotL; 
     }
 
-    vec3 ambient = vec3(0.03) * albedo * ao;
+    vec3 ambient = vec3(0.03) * albedo * ao; //Create an initial ambient collour
 
-    vec3 color = ambient + Lo;
-    color = color / (color + vec3(1.0));
-    color = pow(color, vec3(1.0 / 2.2));
+    vec3 colour = ambient + Lo; // Add the radiance
+    colour = colour / (colour + vec3(1.0)); // Gamma correction
+    colour = pow(colour, vec3(1.0 / 2.2));
 
-    colour = vec4(color, 1.0f);
+    FragColour = vec4(color, 1.0f); // Output final colour
 };
