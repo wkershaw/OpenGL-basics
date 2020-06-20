@@ -155,5 +155,5 @@ void main()
     colour = colour / (colour + vec3(1.0)); // Gamma correction
     colour = pow(colour, vec3(1.0 / 2.2));
 
-    FragColour = vec4(color, 1.0f); // Output final colour
+    FragColour = vec4(colour, 1.0f); // Output final colour
 };
