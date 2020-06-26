@@ -1,42 +1,17 @@
 #include "Renderer.h"
 Renderer::Renderer()
 {
-    /* Initialize the library */
-    if (!glfwInit())
-        throw "glfw initialisation error!\n";
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1000, 800, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        throw "glfw window creation error!\n";
-    }
-
-    /* Make the window's context current */
+    if (!glfwInit()) throw "glfw initialisation error!\n";
+    window = glfwCreateWindow(resolution.x, resolution.y, "OpenGL basics", NULL, NULL);
+    if (!window) { glfwTerminate(); throw "glfw window creation error!\n"; }
     glfwMakeContextCurrent(window);
-
     glfwSwapInterval(1); //Sync the buffer swapping with 1 screen update (vsync)
+    if (glewInit() != GLEW_OK) std::cout << "Error!" << std::endl;
 
-    if (glewInit() != GLEW_OK)
-    {
-        std::cout << "Error!" << std::endl;
-    }
-
-    std::cout << "OpenGL loaded: " << glGetString(GL_VERSION) << std::endl;
-
-    proj = glm::perspective(45.0f, 1000 / 800.0f, 1.0f, 1000.0f);
-
+    glClearColor(clearColour.r, clearColour.g, clearColour.b, clearColour.a);
+    proj = glm::perspective(45.0f, resolution.x / resolution.y, 1.0f, resolution.z);
     cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
     view = glm::lookAt(cameraPosition, glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0));
-
-
-    //ImGui instantiantion
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark(); //Dark mode B-)
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
-
 }
 
 Renderer::~Renderer()
@@ -45,6 +20,10 @@ Renderer::~Renderer()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui::DestroyContext();
     glfwTerminate();
+}
+
+bool Renderer::WindowShouldClose() {
+    return glfwWindowShouldClose(window);
 }
 
 void Renderer::EnableBlending()
@@ -74,6 +53,7 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 
 void Renderer::Draw(Object* object, Shader* shader)
 {
+
     glm::mat4 model = glm::translate(glm::mat4(1.0f), object->GetTranslation());
     model = glm::rotate(model, object->GetRotation().x, glm::vec3(1, 0, 0));
     model = glm::rotate(model, object->GetRotation().y, glm::vec3(0, 1, 0));
@@ -95,6 +75,14 @@ void Renderer::Draw(Object* object, Shader* shader)
     shader->Unbind();
     object->Unbind();
 
+}
+
+void Renderer::StartImGui() {
+    //ImGui instantiantion
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark(); //Dark mode B-)
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 130");
 }
 
 void Renderer::NewImGuiFrame()

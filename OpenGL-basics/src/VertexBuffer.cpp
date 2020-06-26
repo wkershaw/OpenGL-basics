@@ -1,5 +1,8 @@
 #include "VertexBuffer.h"
 
+VertexBuffer::VertexBuffer() {
+    m_RendererID = 0;
+}
 
 VertexBuffer::VertexBuffer(const void* data, unsigned int size)
 {

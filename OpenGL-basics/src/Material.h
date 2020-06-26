@@ -5,7 +5,7 @@
 class Material {
 public:
 	Material();
-	~Material();
+	~Material() {};
 
 	void AddTexture(Texture* texture) { textures.push_back(texture); };
 

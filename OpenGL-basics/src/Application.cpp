@@ -79,6 +79,24 @@ Object* CreateSphere() {
     return sphere;
 }
 
+Object* CreatePlane() {
+    float positions[] = { //Vertex positions for a square
+        -1, -1, 00, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+         1, -1, 00, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+         1,  1, 00, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        -1,  1, 00, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
+    };
+
+    unsigned int indices[] = { //Inices to draw a square
+        0,1,2,
+        2,3,0
+    };
+
+    Object* obj = new Object(positions, 8 * 4, indices, 6);
+    return obj;
+}
+
+
 Material* Metal() {
     Material* metal = new Material();
     metal->AddTexture(new Texture("u_albedoMap", "res/textures/metal/albedo.png"));
@@ -90,13 +108,13 @@ Material* Metal() {
     return metal;
 }
 
-Material* Rock() {
-    Material* rock = new Material();
-    rock->AddTexture(new Texture("u_albedoMap", "res/textures/paint/albedo.png"));
-    rock->AddTexture(new Texture("u_metallicMap", "res/textures/paint/metallic.png"));
-    rock->AddTexture(new Texture("u_normalMap", "res/textures/paint/normal.png"));
-    rock->AddTexture(new Texture("u_roughnessMap", "res/textures/paint/roughness.png"));
-    rock->AddTexture(new Texture("u_aoMap", "res/textures/paint/ao.png"));
+Material Rock() {
+    Material rock = *new Material();
+    rock.AddTexture(new Texture("u_albedoMap", "res/textures/paint/albedo.png"));
+    rock.AddTexture(new Texture("u_metallicMap", "res/textures/paint/metallic.png"));
+    rock.AddTexture(new Texture("u_normalMap", "res/textures/paint/normal.png"));
+    rock.AddTexture(new Texture("u_roughnessMap", "res/textures/paint/roughness.png"));
+    rock.AddTexture(new Texture("u_aoMap", "res/textures/paint/ao.png"));
 
     return rock;
 }
@@ -104,70 +122,38 @@ Material* Rock() {
 int main(void)
 {
     Renderer* renderer = new Renderer(); //Initialise renderer and window
+    std::cout << "OpenGL loaded: " << glGetString(GL_VERSION) << std::endl;
     renderer->EnableBlending();  
     renderer->EnableDepth();
-    glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+    renderer->StartImGui();
 
-    Shader* PBRshader = new Shader("res/shaders/PBR.shader"); //Create a new shader    
-    Shader* basicShader = new Shader("res/shaders/basic.shader"); //Create a new shader    
+    Shader* basicShader = new Shader("res/shaders/basic.shader");
+    Shader* PBRshader = new Shader("res/shaders/PBR.shader"); //Create a new shader      
+    Material* metalMaterial = Metal();
     
     Object* object = CreateSphere();
-    Object* object2 = CreateSphere();
-    Object* light = CreateSphere();
-
-    Material* metalMaterial = Metal();
-    Material* rockMaterial = Rock();
-
+    Object* plane = CreatePlane();
 
     object->AddMaterial(metalMaterial);
-    object->AddLight();
     object->SetTranslation(glm::vec3(-2, 0, -6));
-    object->SetRotation(glm::vec3(0, 0, 0));
-    object->SetScale(glm::vec3(1, 1, 1));
-
-    object2->AddMaterial(rockMaterial);
-    object2->AddLight();
-    object2->SetTranslation(glm::vec3(2, 0, -6));
-    object2->SetRotation(glm::vec3(0, 0, -0));
-    object2->SetScale(glm::vec3(1, 1, 1));
-
-    glm::vec3 lightTranslation = glm::vec3(0, -1, -3);
-    glm::vec3 lightColour = glm::vec3(255,255,255);
-    light->SetScale(glm::vec3(0.3f, 0.3f, 0.3f));
+    plane->SetTranslation(glm::vec3(2, 0, -6));
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(renderer->window))
+    while (!(renderer->WindowShouldClose()))
     {
         /* Render here */
         renderer->Clear();
         renderer->NewImGuiFrame();
 
-        ImGui::SliderFloat3("Light Position", &lightTranslation.x, -20.0f, 20.0f); //Set the scale for the object
-        ImGui::SliderFloat3("Light Colour", &lightColour.x, 0.0f, 255.0f); //Set the scale for the object
-
-        light->SetTranslation(lightTranslation);
-        light->SetColour(glm::vec3(lightColour.r/255, lightColour.g/255, lightColour.b/255));
-
-        object->SetLightPosition(0,lightTranslation);
-        object->SetLightColour(0, lightColour);
-        
-        object2->SetLightPosition(0, lightTranslation);
-        object2->SetLightColour(0, lightColour);
-
         renderer->Draw(object, PBRshader);
-        renderer->Draw(object2, PBRshader);
-        
-        renderer->Draw(light, basicShader);
-
+        renderer->Draw(plane, basicShader);
 
         renderer->DrawFrame();
     }
 
 
     delete object;
-    delete object2;
     delete PBRshader;
-    delete basicShader;
     delete renderer;
     return 0;
 }

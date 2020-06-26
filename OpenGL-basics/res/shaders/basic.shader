@@ -10,10 +10,10 @@ uniform mat4 u_proj;
 uniform mat4 u_view;
 uniform mat4 u_model;
 
+
 void main()
 {
     vec3 WorldPos = vec3(u_model * vec4(lPosition, 1.0));
-
     gl_Position = u_proj * u_view * vec4(WorldPos, 1.0);
 };
 
@@ -23,9 +23,7 @@ void main()
         
 layout(location = 0) out vec4 colour;
 
-uniform vec3 u_colour;
-
 void main(){
-    colour = vec4(u_colour, 1.0);
+    colour = vec4(1,1,1,1);
 
 };

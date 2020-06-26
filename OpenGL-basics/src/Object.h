@@ -23,37 +23,32 @@ public:
 
 	void AddTexture(Texture* texture);
 	void AddMaterial(Material* material);
-	void AddLight();
+	//void AddLight(Light* light);
 
 
 	void SetTranslation(glm::vec3 t) { translation = t; };
 	void SetRotation(glm::vec3 r) { rotation = r; };
 	void SetScale(glm::vec3 s) { scale = s; };
-	void SetLightPosition(int index, glm::vec3 position) { lightPositions[index] = position; };
-	void SetLightColour(int index, glm::vec3 colour) { lightColours[index] = colour; };
 	void SetDrawMode(DrawMode drawMode) { this->drawMode = drawMode; };
-	void SetColour(glm::vec3 colour) { this->colour = colour; };
 
 	glm::vec3 GetTranslation() const { return translation; };
 	glm::vec3 GetRotation() const { return rotation; };
 	glm::vec3 GetScale() const { return scale; };
-	unsigned int GetIndexCount() const { return ib->GetCount(); };
 	DrawMode GetDrawMode() { return drawMode; };
+	unsigned int GetIndexCount() const { return ib.GetCount(); };
 
 private:
 
-	VertexArray* va;
-	IndexBuffer* ib;
-	VertexBuffer* vb;
-	VertexBufferLayout* layout;
+	VertexArray va;
+	IndexBuffer ib;
+	VertexBuffer vb;
+	VertexBufferLayout layout;
 
-	glm::vec3 translation;
-	glm::vec3 rotation;
-	glm::vec3 scale;
-	std::vector<glm::vec3> lightPositions;
-	std::vector<glm::vec3> lightColours;
-	glm::vec3 colour;
+	glm::vec3 translation = glm::vec3(0.0f, 0.0f, 0.0f);;
+	glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);;
+	glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);;
 
+	//std::vector<Light*> lights;
 	std::vector<Material*> materials;
 	std::vector<Texture*> textures;
 	DrawMode drawMode = DrawMode::TRIANGLES;
