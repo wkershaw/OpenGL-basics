@@ -15,7 +15,6 @@ The project implments a physically based rendering shader and material system us
 <img src='https://raw.githubusercontent.com/wkershaw/OpenGL-basics/master/Screenshots/PBR2.PNG' width='40%'>
 
 <h2>Known Issues:</h2>
-nvoglv32.pdb not loaded: an Issues with a draw call somewhere, currently being worked on
 
 <h2>References:</h2>
 <a href='https://www.youtube.com/channel/UCQ-W1KE9EYfdxhL6S4twUNw'>The Cherno</a>
