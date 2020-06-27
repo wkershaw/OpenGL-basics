@@ -9,9 +9,6 @@ Renderer::Renderer()
     if (glewInit() != GLEW_OK) std::cout << "Error!" << std::endl;
 
     glClearColor(clearColour.r, clearColour.g, clearColour.b, clearColour.a);
-    proj = glm::perspective(45.0f, resolution.x / resolution.y, 1.0f, resolution.z);
-    cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-    view = glm::lookAt(cameraPosition, glm::vec3(0.0, 0.0, -1.0), glm::vec3(0.0, 1.0, 0.0));
 }
 
 Renderer::~Renderer()
@@ -60,11 +57,29 @@ void Renderer::Draw(Object* object, Shader* shader)
     model = glm::rotate(model, object->GetRotation().z, glm::vec3(0, 0, 1));
     model = glm::scale(model, object->GetScale());
 
+    float* lightPositions = new float[lights.size() * 3];
+    float* lightColours = new float[lights.size() * 3];
+
+    for (unsigned int i = 0; i < lights.size(); i++) {
+        lightPositions[i] = lights[i]->GetPosition().x;
+        lightPositions[i + 1] = lights[i]->GetPosition().y;
+        lightPositions[i + 2] = lights[i]->GetPosition().z;
+
+        lightColours[i] = lights[i]->GetColour().r;
+        lightColours[i + 1] = lights[i]->GetColour().g;
+        lightColours[i + 2] = lights[i]->GetColour().b;
+    }
+
     object->Bind(shader);
     shader->SetUniformMat4f("u_proj", proj);
     shader->SetUniformMat4f("u_view", view);
     shader->SetUniformMat4f("u_model", model);
     shader->SetUniform3f("u_cameraPosition", cameraPosition);
+    shader->SetUniform3fv("u_lightPositions", lightPositions, lights.size());
+    shader->SetUniform3fv("u_lightColours", lightColours, lights.size());
+
+    
+
     if (object->GetDrawMode() == Object::DrawMode::TRIANGLES) {
         GLCALL(glDrawElements(GL_TRIANGLES, object->GetIndexCount(), GL_UNSIGNED_INT, nullptr)); //Draw the vertices using the index buffer
     }

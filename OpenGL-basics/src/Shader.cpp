@@ -66,6 +66,10 @@ void Shader::SetUniform3fv(const std::string& name, const std::vector<glm::vec3>
     GLCALL(glUniform3fv(GetUniformLocation(name), data.size(), data.data()));
 }
 
+void Shader::SetUniform3fv(const std::string& name, float* values, int size) {
+    GLCALL(glUniform3fv(GetUniformLocation(name), size, values));
+}
+
 int Shader::GetUniformLocation(const std::string& name)
 {
     if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end()) { //Query the cache to reduce glGetUniformLocation calls

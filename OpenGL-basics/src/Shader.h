@@ -37,4 +37,5 @@ public:
 	void SetUniform3f(const std::string& name, const glm::vec3& vector);
 	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
 	void SetUniform3fv(const std::string& name, const std::vector<glm::vec3>& values);
+	void SetUniform3fv(const std::string& name, float* values, int size);
 };

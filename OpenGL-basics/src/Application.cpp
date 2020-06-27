@@ -13,7 +13,7 @@ Object* CreateSphere() {
 
     const unsigned int X_SEGMENTS = 64;
     const unsigned int Y_SEGMENTS = 64;
-    const float PI = 3.14159265359;
+    const float PI = 3.14159265359f;
     for (unsigned int y = 0; y <= Y_SEGMENTS; ++y)
     {
         for (unsigned int x = 0; x <= X_SEGMENTS; ++x)
@@ -127,16 +127,20 @@ int main(void)
     renderer->EnableDepth();
     renderer->StartImGui();
 
-    Shader* basicShader = new Shader("res/shaders/basic.shader");
+    Shader* basicshader = new Shader("res/shaders/basic.shader");
     Shader* PBRshader = new Shader("res/shaders/PBR.shader"); //Create a new shader      
     Material* metalMaterial = Metal();
     
     Object* object = CreateSphere();
-    Object* plane = CreatePlane();
-
     object->AddMaterial(metalMaterial);
-    object->SetTranslation(glm::vec3(-2, 0, -6));
-    plane->SetTranslation(glm::vec3(2, 0, -6));
+    object->SetTranslation(glm::vec3(0, 0, -6));
+
+    glm::vec3 lightTranslation = glm::vec3(-1, 1, -2);
+    glm::vec3 lightColour = glm::vec3(200, 200, 200);
+    Light* light = new Light(lightTranslation, lightColour);
+    Object* lightObject = CreateSphere();
+    lightObject->SetScale(glm::vec3(0.2f));
+    renderer->AddLight(light);
 
     /* Loop until the user closes the window */
     while (!(renderer->WindowShouldClose()))
@@ -145,8 +149,16 @@ int main(void)
         renderer->Clear();
         renderer->NewImGuiFrame();
 
+        ImGui::SliderFloat3("Light Position", &lightTranslation.x, -3.0f, 3.0f);
+        ImGui::SliderFloat3("Light Colour", &lightColour.r, 0.0f, 400.0f);
+
+        light->SetColour(lightColour);
+        light->SetPosition(lightTranslation);
+
+        lightObject->SetTranslation(lightTranslation);
+
         renderer->Draw(object, PBRshader);
-        renderer->Draw(plane, basicShader);
+        renderer->Draw(lightObject, basicshader);
 
         renderer->DrawFrame();
     }

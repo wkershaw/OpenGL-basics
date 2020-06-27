@@ -31,14 +31,14 @@ void Object::Bind(Shader* shader) const
 	shader->Bind();
 	int texturePointer = 0;
 
-	for (int m = 0; m < materials.size(); m++) {
-		for (int t = 0; t < materials[m]->textures.size(); t++) {
+	for (unsigned int m = 0; m < materials.size(); m++) {
+		for (unsigned int t = 0; t < materials[m]->textures.size(); t++) {
 			materials[m]->textures[t]->Bind(texturePointer);
 			shader->SetUniform1i(materials[m]->textures[t]->GetName(), texturePointer);
 			texturePointer++;
 		}
 	}
-	for (int i = 0; i < textures.size(); i++) {
+	for (unsigned int i = 0; i < textures.size(); i++) {
 		textures[i]->Bind(texturePointer);
 		shader->SetUniform1i(textures[i]->GetName(), texturePointer);
 		texturePointer++;

@@ -1,9 +1,9 @@
 #shader vertex
 #version 330 core
         
-layout(location = 0) in vec4 l_Position;
-layout(location = 1) in vec2 l_Uv;
-layout(location = 2) in vec3 l_Normal;
+layout(location = 0) in vec4 position;
+layout(location = 1) in vec2 uv;
+layout(location = 2) in vec3 normal;
 
 
 uniform mat4 u_proj;
@@ -17,9 +17,9 @@ out vec3 Normal;
 void main()
 {
 
-    TexCoords = l_Uv;
-    WorldPos = vec3(u_model * l_Position);
-    Normal = mat3(u_model) * l_Normal;
+    TexCoords = uv;
+    WorldPos = vec3(u_model * position);
+    Normal = mat3(u_model) * normal;
 
     gl_Position = u_proj * u_view * vec4(WorldPos, 1.0);
 };
@@ -42,13 +42,10 @@ uniform sampler2D u_roughnessMap;
 uniform sampler2D u_aoMap;
 
 
-//uniform vec3 u_cameraPosition;
-//uniform vec3 u_lightPositions[1];
-//uniform vec3 u_lightColours[1];
+uniform vec3 u_cameraPosition;
+uniform vec3 u_lightPositions[1];
+uniform vec3 u_lightColours[1];
 
-vec3 u_cameraPosition = vec3(0, 0, 0);
-vec3 u_lightPositions[1] = vec3[](vec3(0,0,0));
-vec3 u_lightColours[1] = vec3[](vec3(200, 200, 200));
 
 const float PI = 3.14159265359;
 

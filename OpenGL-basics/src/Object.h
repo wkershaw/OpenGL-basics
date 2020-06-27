@@ -23,7 +23,6 @@ public:
 
 	void AddTexture(Texture* texture);
 	void AddMaterial(Material* material);
-	//void AddLight(Light* light);
 
 
 	void SetTranslation(glm::vec3 t) { translation = t; };
@@ -48,7 +47,6 @@ private:
 	glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);;
 	glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);;
 
-	//std::vector<Light*> lights;
 	std::vector<Material*> materials;
 	std::vector<Texture*> textures;
 	DrawMode drawMode = DrawMode::TRIANGLES;
